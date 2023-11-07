@@ -44,11 +44,11 @@ export class SpotifyService {
         //need to get artists data (whatevre we need for ArtistData) out of data and return it into the ArtistData thing
         //print out the data to console and see
         console.log(data);
-        if (category === "artist") {
+        if (category === "artists") {
           return data["artists"].items.map(item  => new ArtistData(item));
-        } else if (category === "album") {
+        } else if (category === "albums") {
           return data["albums"].items.map(item => new AlbumData(item));
-        } else if (category === "track") {
+        } else if (category === "tracks") {
           return data["tracks"].items.map(item => new TrackData(item));
         } 
       });//maybe done idk
