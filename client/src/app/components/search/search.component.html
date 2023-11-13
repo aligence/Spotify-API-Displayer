@@ -1,6 +1,6 @@
 <h1>Search Spotify</h1>
 <!--bind input's model to searchString-->
-<input type="text" [(ngModel)]="searchString" placeholder="Enter search term">
+<input [(ngModel)]="searchString">
 <!--TODO: bind select's model to searchCategory-->
 <select [(ngModel)] = "searchCategory">
 	<!--ngFor is used to loop over an array, similar to a loop. here we define category as an option inside the search categories array-->
@@ -8,5 +8,13 @@
 </select>
 <!--TODO: Call search function when the button is clicked-->
 <button class="btn btn-light" (click) = "search()">Search</button>
+
 <!--TODO: Display a carousel component if searching for an artist or album. Bind carousel's resources and give it a static carouselId.-->
+<div>
+	<app-carousel *ngIf = "searchCategory !== 'track'" [resources]="resources" carouselId="resources"></app-carousel>
+</div> 
+
+<ng-container *ngIf="searchCategory === 'track'">
+	<app-track-list [tracks]="resources">{{tracks}}</app-track-list>
+</ng-container>
 <!--TODO: Display a track-list component if searching for a track. Bind track-list's tracks.-->

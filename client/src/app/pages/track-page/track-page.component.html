@@ -1,25 +1,25 @@
 <div class="row">
 	<div *ngIf="track" class="col-6">
 		<!--TODO: populate with track name-->
-		<h1>???</h1>
+		<h1>{{this.track.name}}</h1>
 		<p>
 			<!--TODO: link to album page, display album name-->
-			Track on <a>???</a>
+			Track on <a [href] ="'album/' + this.track.album.id">{{this.track.album.name}}</a>
 		</p>
 		<div>
 			<!--TODO: loop over track's artists-->
 			<p>
 				<!--TODO: link to artist page, display artist name-->
-				Artist: <a>???</a>
+				Artist: <a [href] ="'artist/' + this.track.artists[0].id">{{track.artists[0].name}}</a>
 			</p>
 		</div>
 		<p>
 			<!--TODO: populate with track duration-->
-			Duration: ???
+			Duration: {{track.durationStr}}
 		</p>
 		<p>
 			<!--TODO: link to track page on spotify, display track name-->
-			<a class="btn btn-light" role="button" target="_blank">Open ??? on Spotify</a>
+			<a class="btn btn-light" role="button" target="_blank" [href]="track/track.id">Open {{track.name}} on Spotify</a>
 		</p>
 	</div>
 	<div *ngIf="audioFeatures" class="col-6">

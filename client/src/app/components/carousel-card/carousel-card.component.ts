@@ -16,14 +16,14 @@ export class CarouselCardComponent implements OnInit {
   }
 
   getLocalURL(){
-    if(this.resource.category == "artist"){
-      this.router.navigate(['/artist', this.resource.id]);
+    if (this.resource && this.resource.id) {
+      if(this.resource.category == "artist") {
+      return `/artist/${this.resource.id}`;
+      }
+      else if(this.resource.category == "album") {
+        return `/album/${this.resource.id}`;
+      }
     }
-    if(this.resource.category == "album"){
-      this.router.navigate(['/album', this.resource.id]);
-    }
-    if(this.resource.category == "track"){
-      this.router.navigate(['/track', this.resource.id]);
-    }
+    return '/';
   }
 }

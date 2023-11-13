@@ -40,18 +40,22 @@ export class SpotifyService {
       var encodeResource = encodeURIComponent(resource);
 
       return this.sendRequestToExpress(`${searchEndpoint}/${category}/${encodeResource}`).then(data =>{
+
         //taking response from Promise fulfilled, then isolate the data and return it into whatever data
         //need to get artists data (whatevre we need for ArtistData) out of data and return it into the ArtistData thing
         //print out the data to console and see
-        console.log(data);
-        if (category === "artists") {
+       
+        if (category === "artist") {
+          console.log(data["artists"].items.map(item  => new ArtistData(item)));
           return data["artists"].items.map(item  => new ArtistData(item));
-        } else if (category === "albums") {
+        } else if (category === "album") {
           return data["albums"].items.map(item => new AlbumData(item));
-        } else if (category === "tracks") {
+        } else if (category === "track") {
           return data["tracks"].items.map(item => new TrackData(item));
         } 
-      });//maybe done idk
+      });
+      
+      //maybe done 
       
     //TODO: identify the search endpoint in the express webserver (routes/index.js) and send the request to express.
     //Make sure you're encoding the resource with encodeURIComponent().
@@ -63,8 +67,8 @@ export class SpotifyService {
   getArtist(artistId:string):Promise<ArtistData> {
     var encodeArtistId = encodeURIComponent(artistId);
     var artEndp:string = "artist";
-    return this.sendRequestToExpress(`${artEndp}/${encodeArtistId}`).then((data)=>{
-        return new ArtistData[data];
+    return this.sendRequestToExpress('artist/' + encodeArtistId).then(data=>{
+        return new ArtistData(data)
     });
     //maybe done
 
@@ -72,24 +76,31 @@ export class SpotifyService {
     //Again, you may need to encode the artistId.
   }
 
-  getRelatedArtists(artistId:string):Promise<ArtistData[]> {    
-    //TODO: use the related artist endpoint to make a request to express and return an array of artist data
-    var encodeArtistId = encodeURIComponent(artistId);
-    var relArtEndp:string = "artist-related-artists";
-
-    return this.sendRequestToExpress(`${relArtEndp}/${encodeArtistId}`).then((data: ArtistData[])=>{
-      return data;
+getRelatedArtists(artistId: string): Promise<ArtistData[]> {
+  // TODO: use the related artist endpoint to make a request to express and return an array of artist data
+  var encodeArtistId = encodeURIComponent(artistId);
+  var relArtEndp: string = "artist-related-artists";
+  
+  const relatedArtists = []
+  return this.sendRequestToExpress(`${relArtEndp}/${encodeArtistId}`).then((data) => {
+    data['artists'].forEach(element => {
+      relatedArtists.push(new ArtistData(element))
     });
-    //maybe done
-  }
+    return relatedArtists;
+  });
+}
 
   getTopTracksForArtist(artistId:string):Promise<TrackData[]> {
     //TODO: use the top tracks endpoint to make a request to express.
     var encodeArtistId = encodeURIComponent(artistId);
     var artEndp:string = "artist-top-tracks";
     
-    return this.sendRequestToExpress(`${artEndp}/${encodeArtistId}`).then((data: TrackData[])=>{
-      return data;
+    const topTracks = []
+    return this.sendRequestToExpress(`${artEndp}/${encodeArtistId}`).then(data=>{
+      data["tracks"].forEach(element =>{
+        topTracks.push(new TrackData(element))
+      });
+      return topTracks
     });
   }
 
@@ -97,17 +108,22 @@ export class SpotifyService {
     //TODO: use the albums for an artist endpoint to make a request to express.
     var encodeArtistId = encodeURIComponent(artistId);
     var artEndp:string = "artist-albums";
-    
-    return this.sendRequestToExpress(`${artEndp}/${encodeArtistId}`).then((data: AlbumData[])=>{
-      return data;
+
+    const albumsForArtist = []
+    return this.sendRequestToExpress(`${artEndp}/${encodeArtistId}`).then(data=>{
+      data["items"].forEach(element => {
+        albumsForArtist.push(new AlbumData(element))
+      })
+      return albumsForArtist;
     });
+    
   }
 
   getAlbum(albumId:string):Promise<AlbumData> {
     var encodeAlbID = encodeURIComponent(albumId);
-    var album: string = "album"
-    return this.sendRequestToExpress(`${album}/${encodeAlbID}`).then((data)=>{
-      return new AlbumData[data];
+    return this.sendRequestToExpress("album/"+ encodeAlbID).then(data=>{
+      console.log(data)
+      return new AlbumData(data);
     });
     //TODO: use the album endpoint to make a request to express.
   }
@@ -115,17 +131,23 @@ export class SpotifyService {
   getTracksForAlbum(albumId:string):Promise<TrackData[]> {
     var albId = encodeURIComponent(albumId);
     var a:string = "album-tracks";
-    return this.sendRequestToExpress(`${a}/${albId}`).then((data: TrackData[])=>{
-      return data;
+    const trAlb = []
+    return this.sendRequestToExpress(`${a}/${albId}`).then(data=>{
+      console.log(data)
+      data["items"].forEach(element =>{
+        trAlb.push(new TrackData(element));
+      })
+      return trAlb;
+      
+      
     });
     //TODO: use the tracks for album endpoint to make a request to express.
   }
 
   getTrack(trackId:string):Promise<TrackData> {
     var trackID = encodeURI(trackId);
-    var track:string= "track";
-    return this.sendRequestToExpress(`${track}/${trackID}`).then((data)=>{
-      return new TrackData[data];
+    return this.sendRequestToExpress("track/"+trackID).then((data)=>{
+      return new TrackData(data);
     })
     //TODO: use the track endpoint to make a request to express.
     
@@ -135,8 +157,14 @@ export class SpotifyService {
     //TODO: use the audio features for track endpoint to make a request to express.
     var trackID = encodeURI(trackId);
     var trackAud:string= "track-audio-features";
-    return this.sendRequestToExpress(`${trackAud}/${trackID}`).then((data: TrackFeature[])=>{
-      return data;
+    const audioFeat = []
+    return this.sendRequestToExpress(`${trackAud}/${trackID}`).then(data=>{
+      console.log(data)
+      data["items"].forEach(element =>{
+        audioFeat.push();
+      })
+      return audioFeat
+      
     })
   }
 }
