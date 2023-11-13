@@ -7,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ThermometerComponent implements OnInit {
   //TODO: define Input fields and bind them to the template.
-
+   field:string;
+	 percentage:string;
+   color:string;
+   
+  
   constructor() { }
 
   ngOnInit() {
+   
   }
 
 }

@@ -122,7 +122,6 @@ getRelatedArtists(artistId: string): Promise<ArtistData[]> {
   getAlbum(albumId:string):Promise<AlbumData> {
     var encodeAlbID = encodeURIComponent(albumId);
     return this.sendRequestToExpress("album/"+ encodeAlbID).then(data=>{
-      console.log(data)
       return new AlbumData(data);
     });
     //TODO: use the album endpoint to make a request to express.
@@ -132,7 +131,7 @@ getRelatedArtists(artistId: string): Promise<ArtistData[]> {
     var albId = encodeURIComponent(albumId);
     var a:string = "album-tracks";
     const trAlb = []
-    return this.sendRequestToExpress(`${a}/${albId}`).then(data=>{
+    return this.sendRequestToExpress("album-tracks/"+albId).then(data=>{
       console.log(data)
       data["items"].forEach(element =>{
         trAlb.push(new TrackData(element));
@@ -156,12 +155,12 @@ getRelatedArtists(artistId: string): Promise<ArtistData[]> {
   getAudioFeaturesForTrack(trackId:string):Promise<TrackFeature[]> {
     //TODO: use the audio features for track endpoint to make a request to express.
     var trackID = encodeURI(trackId);
-    var trackAud:string= "track-audio-features";
+    
     const audioFeat = []
-    return this.sendRequestToExpress(`${trackAud}/${trackID}`).then(data=>{
+    return this.sendRequestToExpress("track-audio-features/"+trackID).then(data=>{
       console.log(data)
-      data["items"].forEach(element =>{
-        audioFeat.push();
+      TrackFeature.FeatureTypes.forEach(element =>{
+        audioFeat.push(new TrackFeature(element, audioFeat[element]));
       })
       return audioFeat
       
