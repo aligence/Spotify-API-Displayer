@@ -132,7 +132,6 @@ getRelatedArtists(artistId: string): Promise<ArtistData[]> {
     var a:string = "album-tracks";
     const trAlb = []
     return this.sendRequestToExpress("album-tracks/"+albId).then(data=>{
-      console.log(data)
       data["items"].forEach(element =>{
         trAlb.push(new TrackData(element));
       })
@@ -158,12 +157,11 @@ getRelatedArtists(artistId: string): Promise<ArtistData[]> {
     
     const audioFeat = []
     return this.sendRequestToExpress("track-audio-features/"+trackID).then(data=>{
-      console.log(data)
+      
       TrackFeature.FeatureTypes.forEach(element =>{
-        audioFeat.push(new TrackFeature(element, audioFeat[element]));
+        audioFeat.push(new TrackFeature(element, data[element]));
       })
       return audioFeat
-      
     })
   }
 }

@@ -22,6 +22,7 @@ export class TrackPageComponent implements OnInit {
   	this.trackId = this.route.snapshot.paramMap.get('id');
     this.spotifyService.getTrack(this.trackId).then(data => {
       this.track = data;
+
     });
     this.spotifyService.getAudioFeaturesForTrack(this.trackId).then(data =>{
       this.audioFeatures = data;

@@ -8,10 +8,10 @@
 		</p>
 		<div>
 			<!--TODO: loop over track's artists-->
-			<p>
+			<p *ngFor="let artist of this.track.album.artists">
 				<!--TODO: link to artist page, display artist name-->
-				Artist: <a [href] ="'artist/' + this.track.artists[0].id">{{track.artists[0].name}}</a>
-			</p>
+				Artist: <a [href] ="'artist/' + artist.id">{{artist.name}}</a>
+			</p>	
 		</div>
 		<p>
 			<!--TODO: populate with track duration-->
@@ -24,7 +24,7 @@
 	</div>
 	<div *ngIf="audioFeatures" class="col-6">
 		<!--TODO: loop over types of features and create a thermometer component for each-->
-		<app-thermometer *ngFor ="let feat of audioFeatures" [field]="feat.name" [percentage]="feat.percentageString" [color]="feat.color"></app-thermometer>
+		<app-thermometer *ngFor ="let feature of audioFeatures" [field]="feature.name" [percent]="feature.percentageString" [color]="feature.color"></app-thermometer>
 	</div>
 	
 </div>
